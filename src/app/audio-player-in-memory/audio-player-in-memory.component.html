@@ -1,0 +1,25 @@
+<ion-list>
+  <ion-item *ngFor="let track of playlist; let i = index">
+    <ion-label>
+      {{ track.title }} - {{ track.artist }}
+      <span *ngIf="i === currentTrackIndex">
+        ({{ isPlaying ? "Playing" : "Paused" }})
+      </span>
+    </ion-label>
+    <ion-button size="default" (click)="playTrack(i)">Play</ion-button>
+  </ion-item>
+</ion-list>
+
+<ion-item lines="none">
+  <ion-button size="default" slot="start" (click)="previousTrack()"
+    >Previous</ion-button
+  >
+  <ion-button size="default" (click)="toggleAudio()">{{
+    isPlaying ? "Pause" : "Play"
+  }}</ion-button>
+  <ion-label
+    >{{ currentTime | number : "1.1-1" }} /
+    {{ duration | number : "1.1-1" }}</ion-label
+  >
+  <ion-button size="default" slot="end" (click)="nextTrack()">Next</ion-button>
+</ion-item>
