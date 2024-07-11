@@ -54,11 +54,6 @@ export class AudioPlayerInMemoryComponent implements OnInit, OnDestroy {
         album: 'Album 1',
         artwork: [
           {
-            src: 'https://picsum.photos/96/96?u=a',
-            sizes: '96x96',
-            type: 'image/jpeg',
-          },
-          {
             src: 'https://picsum.photos/512/512?u=a',
             sizes: '512x512',
             type: 'image/jpeg',
@@ -71,11 +66,6 @@ export class AudioPlayerInMemoryComponent implements OnInit, OnDestroy {
         artist: 'Artist 2',
         album: 'Album 2',
         artwork: [
-          {
-            src: 'https://picsum.photos/96/96?u=b',
-            sizes: '96x96',
-            type: 'image/jpeg',
-          },
           {
             src: 'https://picsum.photos/512/512?u=b',
             sizes: '512x512',
@@ -129,7 +119,12 @@ export class AudioPlayerInMemoryComponent implements OnInit, OnDestroy {
         title: track.title,
         artist: track.artist,
         album: track.album,
-        artwork: track.artwork,
+        artwork: track.artwork.map((art) => ({
+          src: art.src,
+          sizes: art.sizes,
+          type: art.type,
+          srcset: `${art.src} ${art.sizes.split('x')[0]}w`,
+        })),
       });
       console.log('Updated media session metadata:', track.title);
     }
