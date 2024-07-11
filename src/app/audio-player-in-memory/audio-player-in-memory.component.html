@@ -23,3 +23,9 @@
   >
   <ion-button size="default" slot="end" (click)="nextTrack()">Next</ion-button>
 </ion-item>
+<ion-item>
+  <ion-button size="default" (click)="toggleSeekMode()">
+    {{ isSeekMode ? "Switch to Track Navigation" : "Switch to Seek Mode" }}
+  </ion-button>
+</ion-item>
+>

@@ -27,9 +27,11 @@ export class AudioPlayerInMemoryComponent implements OnInit, OnDestroy {
   public playlist: Track[];
   public currentTrackIndex = 0;
 
-  isPlaying = false;
-  currentTime = 0;
-  duration = 0;
+  public isSeekMode = true;
+
+  public isPlaying = false;
+  public currentTime = 0;
+  public duration = 0;
 
   constructor() {
     this.audio = new Audio();
@@ -135,30 +137,37 @@ export class AudioPlayerInMemoryComponent implements OnInit, OnDestroy {
     if ('mediaSession' in navigator) {
       navigator.mediaSession.setActionHandler('play', () => this.play());
       navigator.mediaSession.setActionHandler('pause', () => this.pause());
-      navigator.mediaSession.setActionHandler('seekbackward', (details) =>
-        this.seek(-10)
-      );
-      navigator.mediaSession.setActionHandler('seekforward', (details) =>
-        this.seek(10)
-      );
-
-      this.updateNavigationHandlers();
+      this.updateMediaSessionHandlers();
     }
   }
 
-  private updateNavigationHandlers() {
+  private updateMediaSessionHandlers() {
     if ('mediaSession' in navigator) {
-      navigator.mediaSession.setActionHandler(
-        'previoustrack',
-        this.currentTrackIndex > 0 ? () => this.previousTrack() : null
-      );
-      navigator.mediaSession.setActionHandler(
-        'nexttrack',
-        this.currentTrackIndex < this.playlist.length - 1
-          ? () => this.nextTrack()
-          : null
-      );
+      if (this.isSeekMode) {
+        navigator.mediaSession.setActionHandler('seekbackward', (details) =>
+          this.seek(details.seekTime ?? -10)
+        );
+        navigator.mediaSession.setActionHandler('seekforward', (details) =>
+          this.seek(details.seekTime ?? 10)
+        );
+        navigator.mediaSession.setActionHandler('previoustrack', null);
+        navigator.mediaSession.setActionHandler('nexttrack', null);
+      } else {
+        navigator.mediaSession.setActionHandler('seekbackward', null);
+        navigator.mediaSession.setActionHandler('seekforward', null);
+        navigator.mediaSession.setActionHandler('previoustrack', () =>
+          this.previousTrack()
+        );
+        navigator.mediaSession.setActionHandler('nexttrack', () =>
+          this.nextTrack()
+        );
+      }
     }
+  }
+
+  toggleSeekMode() {
+    this.isSeekMode = !this.isSeekMode;
+    this.updateMediaSessionHandlers();
   }
 
   playTrack(index: number) {
