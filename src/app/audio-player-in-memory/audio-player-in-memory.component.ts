@@ -108,6 +108,7 @@ export class AudioPlayerInMemoryComponent implements OnInit, OnDestroy {
     const track = this.playlist[index];
     this.audio.src = track.src;
     this.audio.load();
+    this.currentTime = 0;
     this.updateMediaSessionMetadata(track);
     this.setupMediaSession();
     console.log('Loaded track:', track.title);
